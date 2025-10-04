@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Immersea: Sea Turtle WebXR Experience</title>
+  <meta name="description" content="A-Frame WebXR Sea Turtle Scene">
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-particle-system-component@1.1.2/dist/aframe-particle-system-component.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
+  <!-- Hand tracking (WebXR) -->
+  <script src="https://cdn.jsdelivr.net/npm/aframe-webxr-hand-tracking@3.1.0/dist/aframe-webxr-hand-tracking.min.js"></script>
+  <!-- Custom JS components -->
+  <script src="js/subtitles.js"></script>
+  <script src="js/narration-events.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/interactivity.js"></script>
+  <!-- Ocean shader -->
+  <script>
+    AFRAME.registerShader('ocean-bg', {
+      schema: {},
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec2 vUv;
+        void main() {
+          float y = vUv.y;
+          vec3 color = mix(vec3(0.0, 0.2, 0.5), vec3(0.0, 0.45, 0.65), y);
+          float rays = smoothstep(0.0, 0.25, sin((vUv.x + y * 0.5) * 20.0 + y * 8.0));
+          color += rays * 0.35;
+          float caustic = 0.15 * (sin(50.0 * vUv.x + 10.0 * y) * sin(80.0 * y));
+          color += vec3(caustic);
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `
+    });
+    // Camera bob & sway
+    AFRAME.registerComponent('turtle-motion', {
+      tick: function(time) {
+        var t = time/1000;
+        this.el.object3D.position.y = Math.sin(t*1.5)*0.1;
+        this.el.object3D.rotation.z = Math.sin(t*0.8)*0.08;
+      }
+    });
+  </script>
+</head>
+<body>
+  <a-scene background="color: #052c4f" webxr="required: true" physics="debug: false">
+    <a-sky shader="ocean-bg"></a-sky>
+    <!-- Camera as turtle eyes -->
+    <a-entity id="turtle-camera" camera look-controls wasd-controls turtle-motion position="0 1.6 0" webxr-hand-tracking="hand: left; hand: right"></a-entity>
+    <!-- Narration audio -->
+    <a-entity sound="src: url(assets/narration.mp3); autoplay: true; on: scene-loaded"></a-entity>
+    <!-- Subtitles bubble -->
+    <a-entity id="subtitle-bubble" subtitle-bubble position="0 1.2 -3"></a-entity>
+    <!-- Eddies particle system (hidden until triggered) -->
+    <a-entity id="eddies-particles" eddy-particles visible="false"></a-entity>
+    <!-- Phytoplankton particle system (hidden until triggered) -->
+    <a-entity id="phyto-particles" phyto-particles visible="false"></a-entity>
+    <!-- Satellite data maps (hidden until triggered) -->
+    <a-entity id="satellite-map" satellite-map visible="false" position="0 10 -5"></a-entity>
+    <!-- 3D Turtles swimming near camera -->
+    <a-entity id="turtle-group">
+      <a-entity gltf-model="assets/turtle.glb" scale="0.7 0.7 0.7" position="2 0.4 -4" turtle-swim></a-entity>
+      <a-entity gltf-model="assets/turtle.glb" scale="0.5 0.5 0.5" position="-1 0.4 -3" turtle-swim></a-entity>
+      <!-- More turtles, some will drift away -->
+    </a-entity>
+    <!-- Sunset horizon (hidden until triggered) -->
+    <a-entity id="sunset-horizon" sunset-horizon visible="false"></a-entity>
+    <!-- Data panel for eddies/phytoplankton (spawned on interaction) -->
+    <!-- Panels will be generated dynamically by interactivity.js -->
+  </a-scene>
+</body>
+</html>
