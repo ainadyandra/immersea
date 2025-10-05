@@ -26,14 +26,27 @@
       #subtitle-bubble.hidden {
         opacity: 0;
       }
+      #playAudioBtn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+        padding: 12px 18px;
+        font-size: 1.1em;
+        background: #003366;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+      }
     </style>
   </head>
   <body>
+    <button id="playAudioBtn">Play Narration</button>
     <div id="subtitle-bubble" class="hidden"></div>
     <a-scene background="color: #6EC6FF">
       <a-sky color="#6EC6FF"></a-sky>
-      <!-- Water plane is now above the camera and semi-transparent for underwater effect -->
-      <a-plane position="0 6 0" rotation="-90 0 0" width="100" height="100" color="#0077be" opacity="0.5"></a-plane>
+      <!-- Water plane above camera for underwater effect -->
+      <a-plane position="0 5 0" rotation="-90 0 0" width="100" height="100" color="#0077be" opacity="0.55"></a-plane>
       <a-assets>
         <audio id="narrationAudio" src="assets/narration_audio.mp3"></audio>
         <img id="phytoplanktonImg" src="assets/phytoplankton.jpg">
@@ -42,8 +55,8 @@
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Turtle Model: smaller and lower, under the water plane -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -8" scale="0.25 0.25 0.25" animation="property: position; to: 0 2 -8; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Turtle Model: rotated to face camera, under the water plane -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -8" rotation="0 180 0" scale="0.25 0.25 0.25" animation="property: position; to: 0 2 -8; dir: alternate; loop: true; dur: 4000"></a-entity>
 
       <!-- Satellite map overlay, under the water plane -->
       <a-image id="satellite-map" src="#satelliteImg1" position="0 2 -6" width="5" height="2" visible="true"></a-image>
@@ -62,6 +75,14 @@
     </a-scene>
     <script>
       // Play audio on first user interaction (for autoplay restrictions)
+      document.getElementById('playAudioBtn').onclick = function() {
+        var audioEntity = document.querySelector('#audioTrigger');
+        if (audioEntity && audioEntity.components.sound) {
+          audioEntity.components.sound.playSound();
+        }
+      };
+
+      // Also allow tap/click anywhere for audio (fallback)
       document.body.addEventListener('click', function () {
         var audioEntity = document.querySelector('#audioTrigger');
         if (audioEntity && audioEntity.components.sound) {
