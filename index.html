@@ -38,11 +38,21 @@
         border: none;
         border-radius: 8px;
       }
+      #subtitle-extra {
+        display: block;
+        color: #c7eaff;
+        font-size: 1em;
+        margin-top: 8px;
+        opacity: 0.8;
+      }
     </style>
   </head>
   <body>
     <button id="playAudioBtn">Play Narration</button>
-    <div id="subtitle-bubble" class="hidden"></div>
+    <div id="subtitle-bubble" class="hidden">
+      Welcome to Immersea!
+      <span id="subtitle-extra">Look around for more information</span>
+    </div>
     <a-scene background="color: #1b355c" fog="type: linear; color: #16406b; near:1; far:20">
       <a-sky color="#16406b"></a-sky>
       <a-entity light="type: ambient; color: #2172b8; intensity: 1.2"></a-entity>
@@ -55,14 +65,14 @@
         <img id="satelliteImg2" src="assets/satellite_image_2.jpg">
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
-      <!-- Turtle: far from camera, centered -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -8" rotation="0 180 0" scale="0.18 0.18 0.18"
+      <!-- Turtle: much farther away from camera, centered -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -12" rotation="0 180 0" scale="0.18 0.18 0.18"
         material="opacity: 0.88; transparent: true"
-        animation="property: position; to: 0 2 -8; dir: alternate; loop: true; dur: 4000"></a-entity>
-      <!-- Images spaced around camera: right, left, front -->
+        animation="property: position; to: 0 2 -12; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Images spaced around camera: right, left, and one behind camera -->
       <a-image src="#satelliteImg1" position="6 2 0" rotation="0 -90 0" width="2" height="1" opacity="0.85"></a-image>
       <a-image src="#satelliteImg2" position="-6 2 0" rotation="0 90 0" width="2" height="1" opacity="0.85"></a-image>
-      <a-image src="#phytoplanktonImg" position="0 2 -6" rotation="0 0 0" width="2" height="1" opacity="0.85"></a-image>
+      <a-image src="#phytoplanktonImg" position="0 2 6" rotation="0 180 0" width="2" height="1" opacity="0.85"></a-image>
       <!-- Underwater bubbles/particles -->
       <a-entity geometry="primitive: sphere; radius: 0.09" material="color: #b3e6ff; opacity: 0.16"
         position="2 1 -5" animation="property: position; to: 2 3 -5; dir: alternate; loop: true; dur: 3000"></a-entity>
@@ -87,17 +97,9 @@
         }
       }, { once: true });
       setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('subtitle', {detail: {text: "Welcome to Immersea!"}}));
-      }, 2000);
-      window.addEventListener('subtitle', e => {
         const bubble = document.getElementById('subtitle-bubble');
-        if (e.detail.text) {
-          bubble.textContent = e.detail.text;
-          bubble.classList.remove('hidden');
-        } else {
-          bubble.classList.add('hidden');
-        }
-      });
+        bubble.classList.remove('hidden');
+      }, 2000);
     </script>
   </body>
 </html>
