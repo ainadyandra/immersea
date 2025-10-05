@@ -41,15 +41,15 @@
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Turtle Model (moved further away) -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1.5 -6" scale="2 2 2" animation="property: position; to: 0 2 -6; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Turtle Model (moved further away and smaller) -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1.5 -10" scale="1 1 1" animation="property: position; to: 0 2 -10; dir: alternate; loop: true; dur: 4000"></a-entity>
 
       <!-- Placeholder particle entities -->
       <a-entity id="eddies-particles" visible="false" geometry="primitive: sphere; radius: 0.5" material="color: #00e0ff; opacity: 0.3" position="2 1 -4"></a-entity>
       <a-entity id="phyto-particles" visible="false" geometry="primitive: sphere; radius: 0.3" material="color: #00ff99; opacity: 0.5" position="-2 1.5 -3"></a-entity>
 
-      <!-- Satellite map overlay -->
-      <a-image id="satellite-map" src="#satelliteImg1" position="0 4 -6" width="5" height="2" visible="false"></a-image>
+      <!-- Satellite map overlay (now visible) -->
+      <a-image id="satellite-map" src="#satelliteImg1" position="0 4 -6" width="5" height="2" visible="true"></a-image>
 
       <!-- Sunset horizon placeholder -->
       <a-ring id="sunset-horizon" visible="false" position="0 0.8 -6" radius-inner="5.8" radius-outer="6" color="#FFB53F" rotation="-90 0 0"></a-ring>
@@ -57,13 +57,22 @@
       <!-- Camera -->
       <a-entity camera look-controls wasd-controls position="0 1.6 0"></a-entity>
       <!-- Audio entity for playback -->
-      <a-entity id="audioTrigger" sound="src: url(assets/narration_audio.mp3); autoplay: true"></a-entity>
+      <a-entity id="audioTrigger" sound="src: url(assets/narration_audio.mp3); autoplay: false"></a-entity>
     </a-scene>
     <script>
+      // Play audio on first user interaction (for autoplay restrictions)
+      document.body.addEventListener('click', function () {
+        var audioEntity = document.querySelector('#audioTrigger');
+        if (audioEntity && audioEntity.components.sound) {
+          audioEntity.components.sound.playSound();
+        }
+      }, { once: true });
+
       // Dummy subtitle for testing
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('subtitle', {detail: {text: "Welcome to Immersea!"}}));
       }, 2000);
+
       window.addEventListener('subtitle', e => {
         const bubble = document.getElementById('subtitle-bubble');
         if (e.detail.text) {
