@@ -42,6 +42,7 @@
   </head>
   <body>
     <button id="playAudioBtn">Play Narration</button>
+    <audio id="directAudio" src="assets/narration_audio.mp3" controls style="position:fixed;bottom:20px;left:20px;z-index:100;"></audio>
     <div id="subtitle-bubble" class="hidden"></div>
     <a-scene background="color: #6EC6FF">
       <a-sky color="#6EC6FF"></a-sky>
@@ -55,11 +56,11 @@
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Turtle Model: rotated to face camera, under the water plane -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -8" rotation="0 180 0" scale="0.25 0.25 0.25" animation="property: position; to: 0 2 -8; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Turtle Model: further away, smaller, rotated to face camera -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -16" rotation="0 180 0" scale="0.18 0.18 0.18" animation="property: position; to: 0 2 -16; dir: alternate; loop: true; dur: 4000"></a-entity>
 
       <!-- Satellite map overlay, under the water plane -->
-      <a-image id="satellite-map" src="#satelliteImg1" position="0 2 -6" width="5" height="2" visible="true"></a-image>
+      <a-image id="satellite-map" src="#satelliteImg1" position="0 2 -14" width="5" height="2" visible="true"></a-image>
 
       <!-- Placeholder particle entities -->
       <a-entity id="eddies-particles" visible="false" geometry="primitive: sphere; radius: 0.5" material="color: #00e0ff; opacity: 0.3" position="2 1 -4"></a-entity>
