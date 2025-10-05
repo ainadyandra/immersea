@@ -55,21 +55,21 @@
         <img id="satelliteImg2" src="assets/satellite_image_2.jpg">
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
-      <!-- Turtle: close to camera, centered, facing camera, slightly transparent -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -6" rotation="0 180 0" scale="0.18 0.18 0.18"
+      <!-- Turtle: far from camera, centered -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -8" rotation="0 180 0" scale="0.18 0.18 0.18"
         material="opacity: 0.88; transparent: true"
-        animation="property: position; to: 0 2 -6; dir: alternate; loop: true; dur: 4000"></a-entity>
-      <!-- Images spaced closer, not overlapping, slightly transparent -->
-      <a-image src="#satelliteImg1" position="3 2 -5" rotation="0 15 0" width="2" height="1" opacity="0.82"></a-image>
-      <a-image src="#satelliteImg2" position="-3 2 -5" rotation="0 -15 0" width="2" height="1" opacity="0.82"></a-image>
-      <a-image src="#phytoplanktonImg" position="0 3 -3" rotation="0 0 0" width="2" height="1" opacity="0.82"></a-image>
+        animation="property: position; to: 0 2 -8; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Images spaced around camera: right, left, front -->
+      <a-image src="#satelliteImg1" position="6 2 0" rotation="0 -90 0" width="2" height="1" opacity="0.85"></a-image>
+      <a-image src="#satelliteImg2" position="-6 2 0" rotation="0 90 0" width="2" height="1" opacity="0.85"></a-image>
+      <a-image src="#phytoplanktonImg" position="0 2 -6" rotation="0 0 0" width="2" height="1" opacity="0.85"></a-image>
       <!-- Underwater bubbles/particles -->
       <a-entity geometry="primitive: sphere; radius: 0.09" material="color: #b3e6ff; opacity: 0.16"
-        position="2 1 -4" animation="property: position; to: 2 3 -4; dir: alternate; loop: true; dur: 3000"></a-entity>
+        position="2 1 -5" animation="property: position; to: 2 3 -5; dir: alternate; loop: true; dur: 3000"></a-entity>
       <a-entity geometry="primitive: sphere; radius: 0.07" material="color: #c2f0fa; opacity: 0.11"
-        position="-3 0.7 -5" animation="property: position; to: -3 2 -5; dir: alternate; loop: true; dur: 3400"></a-entity>
+        position="-3 0.7 -7" animation="property: position; to: -3 2 -7; dir: alternate; loop: true; dur: 3400"></a-entity>
       <a-entity geometry="primitive: sphere; radius: 0.05" material="color: #d7faff; opacity: 0.13"
-        position="1 0.5 -2" animation="property: position; to: 1 2 -2; dir: alternate; loop: true; dur: 3200"></a-entity>
+        position="1 0.5 -3" animation="property: position; to: 1 2 -3; dir: alternate; loop: true; dur: 3200"></a-entity>
       <a-entity camera look-controls wasd-controls position="0 2 0"></a-entity>
       <a-entity id="audioTrigger" sound="src: url(assets/narration_audio.mp3); autoplay: false"></a-entity>
     </a-scene>
