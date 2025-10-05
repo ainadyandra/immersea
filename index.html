@@ -32,8 +32,8 @@
     <div id="subtitle-bubble" class="hidden"></div>
     <a-scene background="color: #6EC6FF">
       <a-sky color="#6EC6FF"></a-sky>
-      <!-- Water plane is now much higher, bigger, and more opaque -->
-      <a-plane position="0 10 -7" rotation="-90 0 0" width="100" height="100" color="#0077be" opacity="0.9"></a-plane>
+      <!-- Water plane is now above the camera and semi-transparent for underwater effect -->
+      <a-plane position="0 6 0" rotation="-90 0 0" width="100" height="100" color="#0077be" opacity="0.5"></a-plane>
       <a-assets>
         <audio id="narrationAudio" src="assets/narration_audio.mp3"></audio>
         <img id="phytoplanktonImg" src="assets/phytoplankton.jpg">
@@ -42,21 +42,21 @@
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
 
-      <!-- Turtle Model: smaller and lower -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 2 -30" scale="0.25 0.25 0.25" animation="property: position; to: 0 3 -30; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Turtle Model: smaller and lower, under the water plane -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -8" scale="0.25 0.25 0.25" animation="property: position; to: 0 2 -8; dir: alternate; loop: true; dur: 4000"></a-entity>
+
+      <!-- Satellite map overlay, under the water plane -->
+      <a-image id="satellite-map" src="#satelliteImg1" position="0 2 -6" width="5" height="2" visible="true"></a-image>
 
       <!-- Placeholder particle entities -->
       <a-entity id="eddies-particles" visible="false" geometry="primitive: sphere; radius: 0.5" material="color: #00e0ff; opacity: 0.3" position="2 1 -4"></a-entity>
       <a-entity id="phyto-particles" visible="false" geometry="primitive: sphere; radius: 0.3" material="color: #00ff99; opacity: 0.5" position="-2 1.5 -3"></a-entity>
 
-      <!-- Satellite map overlay (visible) -->
-      <a-image id="satellite-map" src="#satelliteImg1" position="0 4 -6" width="5" height="2" visible="true"></a-image>
-
       <!-- Sunset horizon placeholder -->
       <a-ring id="sunset-horizon" visible="false" position="0 0.8 -6" radius-inner="5.8" radius-outer="6" color="#FFB53F" rotation="-90 0 0"></a-ring>
 
-      <!-- Camera (raised) -->
-      <a-entity camera look-controls wasd-controls position="0 6 0"></a-entity>
+      <!-- Camera (below water plane for underwater view) -->
+      <a-entity camera look-controls wasd-controls position="0 2 0"></a-entity>
       <!-- Audio entity for playback -->
       <a-entity id="audioTrigger" sound="src: url(assets/narration_audio.mp3); autoplay: false"></a-entity>
     </a-scene>
