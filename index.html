@@ -42,12 +42,15 @@
   </head>
   <body>
     <button id="playAudioBtn">Play Narration</button>
-    <audio id="directAudio" src="assets/narration_audio.mp3" controls style="position:fixed;bottom:20px;left:20px;z-index:100;"></audio>
     <div id="subtitle-bubble" class="hidden"></div>
-    <a-scene background="color: #6EC6FF">
-      <a-sky color="#6EC6FF"></a-sky>
-      <!-- Water plane above camera for underwater effect -->
-      <a-plane position="0 5 0" rotation="-90 0 0" width="100" height="100" color="#0077be" opacity="0.55"></a-plane>
+    <a-scene background="color: #1b355c" fog="type: linear; color: #16406b; near:1; far:20">
+      <a-sky color="#16406b"></a-sky>
+      <!-- Ambient blue light for watery effect -->
+      <a-entity light="type: ambient; color: #2172b8; intensity: 1.2"></a-entity>
+      <!-- Dim directional light for depth -->
+      <a-entity light="type: directional; color: #16406b; intensity: 0.25" position="0 10 0"></a-entity>
+      <!-- Water plane above camera, only color and opacity -->
+      <a-plane position="0 5 0" rotation="-90 0 0" width="100" height="100" color="#13568c" opacity="0.35"></a-plane>
       <a-assets>
         <audio id="narrationAudio" src="assets/narration_audio.mp3"></audio>
         <img id="phytoplanktonImg" src="assets/phytoplankton.jpg">
@@ -55,20 +58,21 @@
         <img id="satelliteImg2" src="assets/satellite_image_2.jpg">
         <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
       </a-assets>
-
-      <!-- Turtle Model: further away, smaller, rotated to face camera -->
-      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -16" rotation="0 180 0" scale="0.18 0.18 0.18" animation="property: position; to: 0 2 -16; dir: alternate; loop: true; dur: 4000"></a-entity>
-
-      <!-- Satellite map overlay, under the water plane -->
-      <a-image id="satellite-map" src="#satelliteImg1" position="0 2 -14" width="5" height="2" visible="true"></a-image>
-
-      <!-- Placeholder particle entities -->
-      <a-entity id="eddies-particles" visible="false" geometry="primitive: sphere; radius: 0.5" material="color: #00e0ff; opacity: 0.3" position="2 1 -4"></a-entity>
-      <a-entity id="phyto-particles" visible="false" geometry="primitive: sphere; radius: 0.3" material="color: #00ff99; opacity: 0.5" position="-2 1.5 -3"></a-entity>
-
-      <!-- Sunset horizon placeholder -->
-      <a-ring id="sunset-horizon" visible="false" position="0 0.8 -6" radius-inner="5.8" radius-outer="6" color="#FFB53F" rotation="-90 0 0"></a-ring>
-
+      <!-- Turtle: centered, away, facing camera, slightly transparent -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1 -18" rotation="0 180 0" scale="0.18 0.18 0.18"
+        material="opacity: 0.88; transparent: true"
+        animation="property: position; to: 0 2 -18; dir: alternate; loop: true; dur: 4000"></a-entity>
+      <!-- Images spaced in circle, slightly transparent for murkiness -->
+      <a-image src="#satelliteImg1" position="12 2 -12" rotation="0 45 0" width="3" height="1.5" opacity="0.82"></a-image>
+      <a-image src="#satelliteImg2" position="-12 2 -12" rotation="0 -45 0" width="3" height="1.5" opacity="0.82"></a-image>
+      <a-image src="#phytoplanktonImg" position="0 3 16" rotation="0 180 0" width="3" height="1.5" opacity="0.82"></a-image>
+      <!-- Underwater bubbles/particles -->
+      <a-entity geometry="primitive: sphere; radius: 0.09" material="color: #b3e6ff; opacity: 0.16"
+        position="2 1 -7" animation="property: position; to: 2 3 -7; dir: alternate; loop: true; dur: 3000"></a-entity>
+      <a-entity geometry="primitive: sphere; radius: 0.07" material="color: #c2f0fa; opacity: 0.11"
+        position="-3 0.7 -9" animation="property: position; to: -3 2 -9; dir: alternate; loop: true; dur: 3400"></a-entity>
+      <a-entity geometry="primitive: sphere; radius: 0.05" material="color: #d7faff; opacity: 0.13"
+        position="1 0.5 7" animation="property: position; to: 1 2 7; dir: alternate; loop: true; dur: 3200"></a-entity>
       <!-- Camera (below water plane for underwater view) -->
       <a-entity camera look-controls wasd-controls position="0 2 0"></a-entity>
       <!-- Audio entity for playback -->
@@ -82,20 +86,15 @@
           audioEntity.components.sound.playSound();
         }
       };
-
-      // Also allow tap/click anywhere for audio (fallback)
       document.body.addEventListener('click', function () {
         var audioEntity = document.querySelector('#audioTrigger');
         if (audioEntity && audioEntity.components.sound) {
           audioEntity.components.sound.playSound();
         }
       }, { once: true });
-
-      // Dummy subtitle for testing
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('subtitle', {detail: {text: "Welcome to Immersea!"}}));
       }, 2000);
-
       window.addEventListener('subtitle', e => {
         const bubble = document.getElementById('subtitle-bubble');
         if (e.detail.text) {
