@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Immersea - Pulse of the Sea</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="js/narration-events.js"></script>
+    <script src="js/subtitles.js"></script>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #subtitle-bubble {
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 40, 90, 0.85);
+        color: #fff;
+        padding: 14px 24px;
+        border-radius: 14px;
+        font-size: 1.25em;
+        max-width: 75vw;
+        text-align: center;
+        z-index: 10;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      #subtitle-bubble.hidden {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="subtitle-bubble" class="hidden"></div>
+    <a-scene background="color: #6EC6FF">
+      <a-sky color="#6EC6FF"></a-sky>
+      <a-plane position="0 0 -7" rotation="-90 0 0" width="20" height="20" color="#0077be" opacity="0.7"></a-plane>
+      <a-assets>
+        <audio id="narrationAudio" src="assets/narration_audio.mp3"></audio>
+        <img id="phytoplanktonImg" src="assets/phytoplankton.jpg">
+        <img id="satelliteImg1" src="assets/satellite_image_1.jpg">
+        <img id="satelliteImg2" src="assets/satellite_image_2.jpg">
+        <a-asset-item id="seaTurtleModel" src="assets/sea_turtle_low_poly.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Turtle Model -->
+      <a-entity id="turtle" gltf-model="#seaTurtleModel" position="0 1.5 -3" scale="2 2 2" animation="property: position; to: 0 2 -3; dir: alternate; loop: true; dur: 4000"></a-entity>
+
+      <!-- Placeholder particle entities -->
+      <a-entity id="eddies-particles" visible="false" geometry="primitive: sphere; radius: 0.5" material="color: #00e0ff; opacity: 0.3" position="2 1 -4"></a-entity>
+      <a-entity id="phyto-particles" visible="false" geometry="primitive: sphere; radius: 0.3" material="color: #00ff99; opacity: 0.5" position="-2 1.5 -3"></a-entity>
+
+      <!-- Satellite map overlay -->
+      <a-image id="satellite-map" src="#satelliteImg1" position="0 4 -6" width="5" height="2" visible="false"></a-image>
+
+      <!-- Sunset horizon placeholder -->
+      <a-ring id="sunset-horizon" visible="false" position="0 0.8 -6" radius-inner="5.8" radius-outer="6" color="#FFB53F" rotation="-90 0 0"></a-ring>
+
+      <!-- Camera -->
+      <a-entity camera look-controls wasd-controls position="0 1.6 0"></a-entity>
+    </a-scene>
+    <script>
+      window.addEventListener('subtitle', e => {
+        const bubble = document.getElementById('subtitle-bubble');
+        if (e.detail.text) {
+          bubble.textContent = e.detail.text;
+          bubble.classList.remove('hidden');
+        } else {
+          bubble.classList.add('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>
